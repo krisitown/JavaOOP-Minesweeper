@@ -35,15 +35,19 @@ public class DrawingPanel extends JComponent {
         Graphics2D graphicSettings = (Graphics2D)g;
 
         super.paintComponent(g);
+
+
+
         if(isInitialized){
             int size = this.minefield.getSize();
             blockSize = Window.width/size;
 
             for (int row = 0; row < size; row++) {
                 for (int col = 0; col < size; col++) {
-
                     if(minefield.isCellShown(row,col)){
+                        graphicSettings.setColor(Color.LIGHT_GRAY);
                         graphicSettings.fillRect(row*blockSize, col*blockSize+padding, blockSize, blockSize);
+                        graphicSettings.setColor(Color.BLACK);
                         graphicSettings.drawString(minefield.getCellValue(row,col) == 0 ? "" : Integer.toString(minefield.getCellValue(row,col)), (row*blockSize) +  1, (col*blockSize) +  1 + padding);
                     }
                     else {

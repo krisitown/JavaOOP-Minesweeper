@@ -10,11 +10,13 @@ public class Minefield {
     private Cell[][] field;
     private byte boardSize;
     private byte mineCount;
+    private byte flagsUsed;
 
     public Minefield(byte boardSize) {
         this.boardSize = boardSize;
         this.field = new Cell[boardSize][boardSize];
         this.mineCount = (byte)Math.round((boardSize*boardSize)*0.15);
+        this.flagsUsed = 0;
 
         random = new Random();
         this.initializeBoard();
@@ -111,20 +113,73 @@ public class Minefield {
         if(!field[row][col].isShown){
             if(field[row][col].isFlagged){
                 field[row][col].isFlagged = false;
-            }
+                flagsUsed--;
+           }
             else {
-                field[row][col].isFlagged = true;
+                if(flagsUsed<mineCount) {
+                    field[row][col].isFlagged = true;
+                    flagsUsed++;
+                }
             }
         }
     }
 
     //clicks on a cell, if the cell contains a bomb it returns true
     public boolean clickCell(int row, int col){
-        if(!field[row][col].isShown){
+        if(!field[row][col].isShown && !field[row][col].isFlagged){
             if(field[row][col].hasBomb){
                 return true;
             }
             field[row][col].isShown = true;
+            if(field[row][col].getValue() == 0){
+                if(row - 1 >= 0){
+
+                        clickCell(row - 1, col);
+
+                }
+
+                if(col - 1 >= 0){
+
+                        clickCell(row, col - 1);
+
+                }
+
+                if(row + 1 < field.length){
+
+                        clickCell(row + 1, col);
+
+                }
+
+                if(col + 1 < field[row].length){
+
+                        clickCell(row, col + 1);
+
+                }
+
+                if(row - 1 >= 0 && col - 1 >= 0){
+
+                        clickCell(row - 1, col - 1);
+
+                }
+
+                if(row + 1 > field.length && col + 1 > field[row].length){
+
+                        clickCell(row + 1, col + 1);
+
+                }
+
+                if (row - 1 >= 0 && col + 1 < field[row].length) {
+
+                        clickCell(row - 1, col + 1);
+
+                }
+
+                if(row + 1 < field.length && col - 1 >= 0){
+
+                        clickCell(row + 1, col - 1);
+
+                }
+            }
         }
         return false;
     }
