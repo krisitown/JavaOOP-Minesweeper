@@ -11,10 +11,13 @@ import java.io.IOException;
  */
 public class DrawingPanel extends JComponent {
     private boolean isInitialized;
+    public boolean gameOver;
+    private int size;
     public int padding = Window.height-Window.width-50;
     public int blockSize;
     private Minefield minefield;
     BufferedImage flag;
+    Font font, gameOverFont;
 
     public DrawingPanel(){}
 
@@ -23,6 +26,11 @@ public class DrawingPanel extends JComponent {
         try{
             flag = ImageIO.read(getClass().getResource("res/flag.png"));
         } catch (IOException exc){}
+        size = this.minefield.getSize();
+        blockSize = Window.width/size;
+        font = new Font("Comic Sans MS", Font.BOLD, blockSize);
+        gameOverFont = new Font("Comic Sans MS", Font.BOLD, Window.height/12);
+        gameOver = false;
         isInitialized = true;
     }
 
@@ -36,27 +44,31 @@ public class DrawingPanel extends JComponent {
 
         super.paintComponent(g);
 
-
+        graphicSettings.setFont(font);
 
         if(isInitialized){
-            int size = this.minefield.getSize();
-            blockSize = Window.width/size;
-
             for (int row = 0; row < size; row++) {
                 for (int col = 0; col < size; col++) {
+                    graphicSettings.drawRect(row*blockSize, col*blockSize +padding, blockSize, blockSize);
                     if(minefield.isCellShown(row,col)){
                         graphicSettings.setColor(Color.LIGHT_GRAY);
-                        graphicSettings.fillRect(row*blockSize, col*blockSize+padding, blockSize, blockSize);
+                        graphicSettings.fillRect((row*blockSize) + 2, (col*blockSize)+padding+2, blockSize-2, blockSize-2);
                         graphicSettings.setColor(Color.BLACK);
-                        graphicSettings.drawString(minefield.getCellValue(row,col) == 0 ? "" : Integer.toString(minefield.getCellValue(row,col)), (row*blockSize) +  1, (col*blockSize) +  1 + padding);
-                    }
-                    else {
-                        graphicSettings.drawRect(row*blockSize, col*blockSize +padding, blockSize, blockSize);
+
+                        graphicSettings.drawString(minefield.getCellValue(row,col) == 0 ? "" : Integer.toString(minefield.getCellValue(row,col)),
+                                (row*blockSize) +  (int)(blockSize*0.20), (col*blockSize) + (int)(blockSize*0.20) + padding + (int)(blockSize*0.75));
                     }
                     if(minefield.isCellFlagged(row,col)){
                         graphicSettings.drawImage(flag, (row*blockSize) +  1, (col*blockSize) + 1 +padding,  blockSize - 2, blockSize - 2, this);
                     }
                 }
+            }
+            if (gameOver){
+                graphicSettings.setFont(gameOverFont);
+                graphicSettings.setColor(Color.RED);
+                graphicSettings.drawString("Game Over!", (Window.width/2)-(int)(2.8*gameOverFont.getSize()), (Window.height/2)-(gameOverFont.getSize()/2));
+                graphicSettings.setColor(Color.BLACK);
+                graphicSettings.setFont(font);
             }
         }
     }

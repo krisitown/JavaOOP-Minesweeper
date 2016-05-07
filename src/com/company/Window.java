@@ -40,7 +40,9 @@ public class Window extends JFrame {
                         if(e.getButton() == MouseEvent.BUTTON1){
                             int row = (int)Math.floor(x/drawingPanel.blockSize);
                             int col = (int)Math.floor((y-drawingPanel.padding)/drawingPanel.blockSize);
-                            drawingPanel.getMinefield().clickCell(row, col);
+                            if(drawingPanel.getMinefield().clickCell(row, col)){
+                                drawingPanel.gameOver = true;
+                            }
                         }
                         else if(e.getButton() == MouseEvent.BUTTON3){
                             int row = (int)Math.floor(x/drawingPanel.blockSize);
