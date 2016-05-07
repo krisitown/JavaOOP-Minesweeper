@@ -35,19 +35,21 @@ public class Window extends JFrame {
                 drawingPanel.addMouseListener(new MouseInputListener() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        int x = e.getX();
-                        int y = e.getY();
-                        if(e.getButton() == MouseEvent.BUTTON1){
-                            int row = (int)Math.floor(x/drawingPanel.blockSize);
-                            int col = (int)Math.floor((y-drawingPanel.padding)/drawingPanel.blockSize);
-                            if(drawingPanel.getMinefield().clickCell(row, col)){
-                                drawingPanel.gameOver = true;
+                        if(!drawingPanel.gameOver){
+                            int x = e.getX();
+                            int y = e.getY();
+                            if(e.getButton() == MouseEvent.BUTTON1){
+                                int row = (int)Math.floor(x/drawingPanel.blockSize);
+                                int col = (int)Math.floor((y-drawingPanel.padding)/drawingPanel.blockSize);
+                                if(drawingPanel.getMinefield().clickCell(row, col)){
+                                    drawingPanel.gameOver = true;
+                                }
                             }
-                        }
-                        else if(e.getButton() == MouseEvent.BUTTON3){
-                            int row = (int)Math.floor(x/drawingPanel.blockSize);
-                            int col = (int)Math.floor((y-drawingPanel.padding)/drawingPanel.blockSize);
-                            drawingPanel.getMinefield().toggleFlagOfCell(row, col);
+                            else if(e.getButton() == MouseEvent.BUTTON3){
+                                int row = (int)Math.floor(x/drawingPanel.blockSize);
+                                int col = (int)Math.floor((y-drawingPanel.padding)/drawingPanel.blockSize);
+                                drawingPanel.getMinefield().toggleFlagOfCell(row, col);
+                            }
                         }
                     }
 
