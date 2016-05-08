@@ -7,12 +7,16 @@ import com.sun.javaws.exceptions.InvalidArgumentException;
  * it holds information whether it is bomb or has a value
  */
 public class Cell {
-    private byte value = 0;
-    public boolean hasBomb = false;
-    public boolean isFlagged = false;
-    public boolean isShown = false;
+    private byte value;
+    public boolean hasBomb;
+    public boolean isFlagged;
+    public boolean isShown;
 
     public Cell() {
+        hasBomb = false;
+        isFlagged = false;
+        isShown = false;
+        value = 0;
     }
 
     public void setValue(byte value){

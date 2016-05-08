@@ -11,12 +11,17 @@ public class Minefield {
     private byte boardSize;
     private byte mineCount;
     private byte flagsUsed;
+    private byte shownCells;
+    private int totalCells;
+    public boolean playerWon;
 
     public Minefield(byte boardSize) {
         this.boardSize = boardSize;
         this.field = new Cell[boardSize][boardSize];
-        this.mineCount = (byte)Math.round((boardSize*boardSize)*0.15);
+        this.mineCount = (byte)Math.floor((boardSize*boardSize)*0.15);
         this.flagsUsed = 0;
+        this.shownCells = 0;
+        this.totalCells = boardSize * boardSize;
 
         random = new Random();
         this.initializeBoard();
@@ -110,15 +115,19 @@ public class Minefield {
 
     //toggles the flag of a cell
     public void toggleFlagOfCell(int row, int col){
-        if(!field[row][col].isShown){
-            if(field[row][col].isFlagged){
-                field[row][col].isFlagged = false;
-                flagsUsed--;
-           }
-            else {
-                if(flagsUsed<mineCount) {
-                    field[row][col].isFlagged = true;
-                    flagsUsed++;
+        if(!playerWon){
+            if(row >= 0 && col >= 0 && col < field[row].length && row < field.length){
+                if(!field[row][col].isShown){
+                    if(field[row][col].isFlagged){
+                        field[row][col].isFlagged = false;
+                        flagsUsed--;
+                    }
+                    else {
+                        if(flagsUsed<mineCount) {
+                            field[row][col].isFlagged = true;
+                            flagsUsed++;
+                        }
+                    }
                 }
             }
         }
@@ -126,61 +135,72 @@ public class Minefield {
 
     //clicks on a cell, if the cell contains a bomb it returns true
     public boolean clickCell(int row, int col){
-        if(!field[row][col].isShown && !field[row][col].isFlagged){
-            if(field[row][col].hasBomb){
-                return true;
-            }
-            field[row][col].isShown = true;
-            if(field[row][col].getValue() == 0){
-                if(row - 1 >= 0){
+        if(!playerWon) {
+            if (row >= 0 && col >= 0 && col < field[row].length && row < field.length) {
+                if (!field[row][col].isShown && !field[row][col].isFlagged) {
+                    if (field[row][col].hasBomb) {
+                        return true;
+                    }
 
-                        clickCell(row - 1, col);
+                    //keep track of the number of shown cells by the player
+                    field[row][col].isShown = true;
+                    shownCells++;
+                    if (field[row][col].getValue() == 0) {
+                        if (row - 1 >= 0) {
 
-                }
+                            clickCell(row - 1, col);
 
-                if(col - 1 >= 0){
+                        }
 
-                        clickCell(row, col - 1);
+                        if (col - 1 >= 0) {
 
-                }
+                            clickCell(row, col - 1);
 
-                if(row + 1 < field.length){
+                        }
 
-                        clickCell(row + 1, col);
+                        if (row + 1 < field.length) {
 
-                }
+                            clickCell(row + 1, col);
 
-                if(col + 1 < field[row].length){
+                        }
 
-                        clickCell(row, col + 1);
+                        if (col + 1 < field[row].length) {
 
-                }
+                            clickCell(row, col + 1);
 
-                if(row - 1 >= 0 && col - 1 >= 0){
+                        }
 
-                        clickCell(row - 1, col - 1);
+                        if (row - 1 >= 0 && col - 1 >= 0) {
 
-                }
+                            clickCell(row - 1, col - 1);
 
-                if(row + 1 > field.length && col + 1 > field[row].length){
+                        }
 
-                        clickCell(row + 1, col + 1);
+                        if (row + 1 > field.length && col + 1 > field[row].length) {
 
-                }
+                            clickCell(row + 1, col + 1);
 
-                if (row - 1 >= 0 && col + 1 < field[row].length) {
+                        }
 
-                        clickCell(row - 1, col + 1);
+                        if (row - 1 >= 0 && col + 1 < field[row].length) {
 
-                }
+                            clickCell(row - 1, col + 1);
 
-                if(row + 1 < field.length && col - 1 >= 0){
+                        }
 
-                        clickCell(row + 1, col - 1);
+                        if (row + 1 < field.length && col - 1 >= 0) {
 
+                            clickCell(row + 1, col - 1);
+
+                        }
+                    }
+
+                    //check if the player won
+                    playerWon = totalCells - mineCount == shownCells;
                 }
             }
         }
+
         return false;
     }
 
@@ -199,4 +219,6 @@ public class Minefield {
     public boolean isCellFlagged(int row, int col){
         return field[row][col].isFlagged;
     }
+
+    public boolean doesCellHaveBomb(int row, int col) { return field[row][col].hasBomb; }
 }

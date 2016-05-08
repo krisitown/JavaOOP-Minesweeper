@@ -61,12 +61,26 @@ public class DrawingPanel extends JComponent {
                     if(minefield.isCellFlagged(row,col)){
                         graphicSettings.drawImage(flag, (row*blockSize) +  1, (col*blockSize) + 1 +padding,  blockSize - 2, blockSize - 2, this);
                     }
+
+                    //god mode
+                    else if(minefield.doesCellHaveBomb(row,col)){
+                        graphicSettings.drawString("x",
+                                (row*blockSize) +  (int)(blockSize*0.20), (col*blockSize) + (int)(blockSize*0.20) + padding + (int)(blockSize*0.75));
+                    }
                 }
             }
             if (gameOver){
                 graphicSettings.setFont(gameOverFont);
                 graphicSettings.setColor(Color.RED);
                 graphicSettings.drawString("Game Over!", (Window.width/2)-(int)(2.8*gameOverFont.getSize()), (Window.height/2)-(gameOverFont.getSize()/2));
+                graphicSettings.setColor(Color.BLACK);
+                graphicSettings.setFont(font);
+            }
+
+            if(minefield.playerWon){
+                graphicSettings.setFont(gameOverFont);
+                graphicSettings.setColor(Color.GREEN);
+                graphicSettings.drawString("You Win!", (Window.width/2)-(2*gameOverFont.getSize()), (Window.height/2)-(gameOverFont.getSize()/2));
                 graphicSettings.setColor(Color.BLACK);
                 graphicSettings.setFont(font);
             }

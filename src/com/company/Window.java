@@ -28,7 +28,7 @@ public class Window extends JFrame {
 
         startGame.addActionListener(e -> {
             byte size = Byte.parseByte(boardSize.getText());
-            if(size >= 10 && size < 121){
+            if(size >= 5 && size < 121){
                 Minefield minefield = new Minefield(size);
                 drawingPanel.InitializePanel(minefield);
                 drawingPanel.setVisible(true);
