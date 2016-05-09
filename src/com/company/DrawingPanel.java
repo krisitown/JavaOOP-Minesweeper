@@ -63,10 +63,13 @@ public class DrawingPanel extends JComponent {
                     }
 
                     //god mode
+                    /*
                     else if(minefield.doesCellHaveBomb(row,col)){
+
                         graphicSettings.drawString("x",
                                 (row*blockSize) +  (int)(blockSize*0.20), (col*blockSize) + (int)(blockSize*0.20) + padding + (int)(blockSize*0.75));
                     }
+                    */
                 }
             }
             if (gameOver){
